@@ -35,5 +35,3 @@ frontend/.env.development.local
 frontend/.env.test.local
 frontend/.env.production.local
 
-# 8. Coverage reports (if using testing tools)
-coverage/
