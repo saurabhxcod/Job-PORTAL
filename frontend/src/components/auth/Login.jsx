@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React, { useState } from 'react';
 import Navbar from '../shared/Navbar';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,9 +15,26 @@ const Login = () => {
         setInput({ ...input, [e.target.name]: e.target.value });
     }
 
-    const submitHandler=async(e)=>{
+    const submitHandler = async (e) => {
         e.preventDefault();
-        console.log(input);
+        try {
+            const res = await axios.post(`${USER_API_END_POINT}/login`, input, {
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                withCredentials: true,
+            })
+            if (res.data.success) {
+                navigate("/");
+                toast.success(res.data.message);
+            }
+
+        } catch (error) {
+            console.log(error);
+            toast.error(error.response.data.message);
+
+        }
+
     }
     return (
         <div className="min-h-screen bg-gradient-to-br from-white to-gray-100">
@@ -68,11 +85,11 @@ const Login = () => {
                             <Label className="block mb-2 text-sm font-medium text-gray-700">Role</Label>
                             <div className="flex items-center gap-4">
                                 <label className="flex items-center gap-2 cursor-pointer">
-                                    <input type="radio" name="role" value="student"  checked={input.role==='student'} onChange={changeEventHandler} className="accent-purple-600" />
+                                    <input type="radio" name="role" value="student" checked={input.role === 'student'} onChange={changeEventHandler} className="accent-purple-600" />
                                     <span className="text-sm text-gray-700">Student</span>
                                 </label>
                                 <label className="flex items-center gap-2 cursor-pointer">
-                                    <input type="radio" name="role" value="recruiter"  checked={input.role==='recruiter'} onChange={changeEventHandler} className="accent-purple-600" />
+                                    <input type="radio" name="role" value="recruiter" checked={input.role === 'recruiter'} onChange={changeEventHandler} className="accent-purple-600" />
                                     <span className="text-sm text-gray-700">Recruiter</span>
                                 </label>
                             </div>

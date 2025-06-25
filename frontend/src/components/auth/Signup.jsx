@@ -3,29 +3,59 @@ import Navbar from '../shared/Navbar';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { USER_API_END_POINT } from '../../utils/constant';
+import axios from 'axios'
+import { toast } from "sonner"
 
 const Signup = () => {
-     const [input,setInput]=useState({
-        fullname:"",
-        email:"",
-        phoneNumber:"",
-        password:"",
-        role:"",
-        file:""
-    });
-    const changeEventHandler=(e)=>{
-        setInput({...input,[e.target.name]:e.target.value});
+  const [input, setInput] = useState({
+    fullname: "",
+    email: "",
+    phoneNumber: "",
+    password: "",
+    role: "",
+    file: ""
+  });
+
+  const navigate = useNavigate();
+  const changeEventHandler = (e) => {
+    setInput({ ...input, [e.target.name]: e.target.value });
+  }
+
+  const changeFileHandler = (e) => {
+    setInput({ ...input, file: e.target.files?.[0] });
+  }
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("fullname", input.fullname);
+    formData.append("email", input.email);
+    formData.append("phoneNumber", input.phoneNumber);
+    formData.append("password", input.password);
+    formData.append("role", input.role);
+    if (input.file) {
+      formData.append("file", input.file);
+    }
+    try {
+      const res = await axios.post(`${USER_API_END_POINT}/register`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        },
+        withCredentials: true,
+      })
+      if (res.data.success) {
+        navigate("/login");
+        toast.success(res.data.message);
+      }
+
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.message);
     }
 
-    const changeFileHandler=(e)=>{
-        setInput({...input,file:e.target.files?.[0]});
-    }
-
-    const submitHandler=async(e)=>{
-        e.preventDefault();
-        console.log(input);
-    }
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-white to-gray-100">
@@ -96,16 +126,16 @@ const Signup = () => {
           </div>
 
           <div className="flex flex-col sm:flex-row justify-between gap-4">
- 
+
             <div>
               <Label className="block mb-2 text-sm font-medium text-gray-700">Role</Label>
               <div className="flex items-center gap-4">
                 <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="radio" name="role" value="student" checked={input.role==='student'} onChange={changeEventHandler} className="accent-purple-600" />
+                  <input type="radio" name="role" value="student" checked={input.role === 'student'} onChange={changeEventHandler} className="accent-purple-600" />
                   <span className="text-sm text-gray-700">Student</span>
                 </label>
                 <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="radio" name="role" value="recruiter" checked={input.role==='recruiter'} onChange={changeEventHandler} className="accent-purple-600" />
+                  <input type="radio" name="role" value="recruiter" checked={input.role === 'recruiter'} onChange={changeEventHandler} className="accent-purple-600" />
                   <span className="text-sm text-gray-700">Recruiter</span>
                 </label>
               </div>
