@@ -3,7 +3,13 @@ import Navbar from '../shared/Navbar';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from "sonner"
+import axios from 'axios'
+import { USER_API_END_POINT } from '../../utils/constant';
+import { useDispatch, useSelector } from 'react-redux';
+import { setLoading } from '../../redux/authSlice';
+import { Loader2 } from 'lucide-react';
 
 const Login = () => {
     const [input, setInput] = useState({
@@ -14,10 +20,13 @@ const Login = () => {
     const changeEventHandler = (e) => {
         setInput({ ...input, [e.target.name]: e.target.value });
     }
-
+    const { loading } = useSelector(store => store.auth);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
     const submitHandler = async (e) => {
         e.preventDefault();
         try {
+            dispatch(setLoading(true));
             const res = await axios.post(`${USER_API_END_POINT}/login`, input, {
                 headers: {
                     "Content-Type": "application/json"
@@ -33,6 +42,9 @@ const Login = () => {
             console.log(error);
             toast.error(error.response.data.message);
 
+        }
+        finally {
+            dispatch(setLoading(false));
         }
 
     }
@@ -96,13 +108,17 @@ const Login = () => {
                         </div>
 
                     </div>
+                    {
+                        loading ? <Button className="w-full my-4"><Loader2 className='mr-2 h-4 w-4 animate-spin' />Please Wait</Button> : 
+                        <Button
+                            type="submit"
+                            className="w-full bg-[#6A38C2] hover:bg-[#582f9d] text-white font-medium py-2 rounded-xl shadow-lg"
+                        >
+                            Login
+                        </Button>
+                    }
 
-                    <Button
-                        type="submit"
-                        className="w-full bg-[#6A38C2] hover:bg-[#582f9d] text-white font-medium py-2 rounded-xl shadow-lg"
-                    >
-                        Login
-                    </Button>
+
 
 
                     <p className="text-sm text-center text-gray-600">
