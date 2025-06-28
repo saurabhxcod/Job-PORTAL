@@ -2,7 +2,7 @@ import React from 'react'
 import Job from './Job';
 import Navbar from './shared/Navbar';
 
-const randomJobs = [1, 2, 3];
+const randomJobs = [1, 2, 3,4];
 const Browse = () => {
     return (
         <div>
