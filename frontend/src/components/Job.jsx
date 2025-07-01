@@ -3,8 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Bookmark, Briefcase, IndianRupee } from 'lucide-react';
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from '@/components/ui/badge';
+import { useNavigate } from 'react-router-dom';
 
 const Job = () => {
+  const navigate=useNavigate();
   return (
     <div className="p-6 rounded-xl shadow-xl bg-white border border-gray-200 transition-transform hover:scale-[1.01] hover:shadow-2xl duration-300">
       {/* Header */}
@@ -18,7 +20,11 @@ const Job = () => {
       {/* Company Info */}
       <div className="flex items-center gap-4 mb-4">
         <Avatar className="w-12 h-12">
-          <AvatarImage src="" alt="Company Logo" />
+          <AvatarImage
+            src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg"
+            alt="Microsoft Logo"
+          />
+
         </Avatar>
         <div>
           <h2 className="text-lg font-semibold text-gray-800">Company Name</h2>
@@ -51,7 +57,7 @@ const Job = () => {
 
       {/* Action Buttons */}
       <div className="flex items-center gap-3">
-        <Button variant="outline" className="hover:bg-gray-100 transition">Details</Button>
+        <Button onClick={()=>navigate(`/description/${jobId}`)} variant="outline" className="hover:bg-gray-100 transition">Details</Button>
         <Button className="bg-[#7209b7] text-white hover:bg-[#5e0894] transition">
           Save For Later
         </Button>
