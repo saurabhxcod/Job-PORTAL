@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { useNavigate } from 'react-router-dom';
 
 const Job = () => {
+  const jobId="cjzkbzkvv";
   const navigate=useNavigate();
   return (
     <div className="p-6 rounded-xl shadow-xl bg-white border border-gray-200 transition-transform hover:scale-[1.01] hover:shadow-2xl duration-300">
