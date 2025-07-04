@@ -14,6 +14,7 @@ import { Loader2 } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import {USER_API_END_POINT} from "../utils/constant.js"
 
+
 const UpdateProfileDialogue = ({ open, setOpen }) => {
   const [loading, setLoading] = useState(false);
   const dispatch=useDispatch();
@@ -57,6 +58,7 @@ const UpdateProfileDialogue = ({ open, setOpen }) => {
       })
       if(res.data.success){
         dispatch(setUser(res.data.user));
+        
         
       }
     } catch (error) {
