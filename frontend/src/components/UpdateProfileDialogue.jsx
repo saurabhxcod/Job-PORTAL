@@ -6,14 +6,17 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
+import axios from 'axios'
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from 'lucide-react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import {USER_API_END_POINT} from "../utils/constant.js"
 
 const UpdateProfileDialogue = ({ open, setOpen }) => {
   const [loading, setLoading] = useState(false);
+  const dispatch=useDispatch();
   const { user } = useSelector(store => store.auth);
   const [input, setInput] = useState({
     fullname: user?.fullname || "",
@@ -33,7 +36,7 @@ const UpdateProfileDialogue = ({ open, setOpen }) => {
     setInput({ ...input, file })
   }
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append("fullname", input.fullname);
@@ -41,8 +44,24 @@ const UpdateProfileDialogue = ({ open, setOpen }) => {
     formData.append("phoneNumber", input.phoneNumber);
     formData.append("bio", input.bio);
     formData.append("skills", input.skills);
-    
+    if(input.file){
+      formData.append("file",input.file);
+    }
 
+    try {
+      const res=await axios.post(`${USER_API_END_POINT}/profile/update`,formData,{
+        headers:{
+          'Content-Type':"multipart/form-data"
+        },
+        withCredentials:true
+      })
+      if(res.data.success){
+        dispatch(setUser(res.data.user));
+        
+      }
+    } catch (error) {
+      
+    }
   }
 
 
