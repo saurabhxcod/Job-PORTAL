@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge"
 import UpdateProfileDialogue from './UpdateProfileDialogue';
 import { useSelector } from 'react-redux';
 
-const skills = ["HTML", "CSS", "JS", "React", "Node"];
+// const skills = ["HTML", "CSS", "JS", "React", "Node"];
 const isResume = true;
 const Profile = () => {
 
@@ -30,8 +30,8 @@ const Profile = () => {
                                 <AvatarFallback>FN</AvatarFallback>
                             </Avatar>
                             <div>
-                                <h1 className='text-2xl font-semibold text-gray-800'>Full Name</h1>
-                                <p className='text-sm text-gray-500 mt-1'>Add your Bio here</p>
+                                <h1 className='text-2xl font-semibold text-gray-800'>{user?.fullname}</h1>
+                                <p className='text-sm text-gray-500 mt-1'>{user?.bio}</p>
                             </div>
                         </div>
                         <Button onClick={()=>setOpen(true)} variant="outline" size="icon" className='border-gray-300 hover:bg-gray-100'>
@@ -43,11 +43,11 @@ const Profile = () => {
                     <div className='mt-6 space-y-3 text-gray-700'>
                         <div className='flex items-center gap-3'>
                             <Mail className="h-5 w-5 text-[#6A38C2]" />
-                            <span>xyz@gmail.com</span>
+                            <span>{user?.email}</span>
                         </div>
                         <div className='flex items-center gap-3'>
                             <Contact className="h-5 w-5 text-[#6A38C2]" />
-                            <span>78453341534</span>
+                            <span>{user?.phoneNumber}</span>
                         </div>
                     </div>
 
@@ -56,8 +56,8 @@ const Profile = () => {
                         <h2 className='text-md font-semibold mb-2 text-gray-800'>Skills</h2>
                         <div className='flex flex-wrap gap-2'>
                             {
-                                skills.length !== 0
-                                    ? skills.map((skill, index) => (
+                                user?.profile?.skills.length !== 0
+                                    ? user?.profile?.skills.map((skill, index) => (
                                         <Badge key={index} className='bg-[#6A38C2]/10 text-[#6A38C2] px-3 py-1 rounded-full text-sm'>
                                             {skill}
                                         </Badge>

@@ -12,12 +12,14 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
-import {USER_API_END_POINT} from "../utils/constant.js"
+import { USER_API_END_POINT } from "../utils/constant.js"
+import { toast } from 'sonner';
+import {setUser} from '../redux/authSlice.js'
 
 
 const UpdateProfileDialogue = ({ open, setOpen }) => {
   const [loading, setLoading] = useState(false);
-  const dispatch=useDispatch();
+  const dispatch = useDispatch();
   const { user } = useSelector(store => store.auth);
   const [input, setInput] = useState({
     fullname: user?.fullname || "",
@@ -26,7 +28,9 @@ const UpdateProfileDialogue = ({ open, setOpen }) => {
     bio: user?.profile?.bio || "",
     skills: user?.profile?.skills?.map(skill => skill) || "",
     file: user?.profile?.resume
-  })
+  });
+
+
 
   const changeEventHandler = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
@@ -45,25 +49,31 @@ const UpdateProfileDialogue = ({ open, setOpen }) => {
     formData.append("phoneNumber", input.phoneNumber);
     formData.append("bio", input.bio);
     formData.append("skills", input.skills);
-    if(input.file){
-      formData.append("file",input.file);
+    if (input.file) {
+      formData.append("file", input.file);
     }
 
     try {
-      const res=await axios.post(`${USER_API_END_POINT}/profile/update`,formData,{
-        headers:{
-          'Content-Type':"multipart/form-data"
+      setLoading(true);
+      const res = await axios.post(`${USER_API_END_POINT}/profile/update`, formData, {
+        headers: {
+          'Content-Type': "multipart/form-data"
         },
-        withCredentials:true
+        withCredentials: true
       })
-      if(res.data.success){
+      if (res.data.success) {
         dispatch(setUser(res.data.user));
-        
-        
+        toast.success(res.data.message);
       }
     } catch (error) {
-      
+      console.error("Update profile error:", error);
+      toast.error(error?.response?.data?.message || error.message || "Something went wrong.");
     }
+    finally {
+      setLoading(false);
+    }
+    setOpen(false);
+    console.log(input);
   }
 
 
@@ -162,7 +172,6 @@ const UpdateProfileDialogue = ({ open, setOpen }) => {
                 ) : (
                   <Button
                     type="submit"
-                    onClick={() => setLoading(true)}
                     className="w-full my-4 bg-[#6A38C2] hover:bg-[#5f32ad] text-white font-semibold text-sm py-2 rounded-xl transition"
                   >
                     Update
