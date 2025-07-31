@@ -155,6 +155,7 @@ const UpdateProfileDialogue = ({ open, setOpen }) => {
                   name="file"
                   type="file"
                   onChange={fileChangeHandler}
+          
                   className="col-span-3 px-3 py-2 text-sm rounded-lg border border-gray-300
                     file:mr-4 file:py-1 file:px-2 file:border-0 file:rounded
                     file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200 transition"

@@ -74,15 +74,15 @@ const Profile = () => {
                             {
                                 isResume
                                     ? <a
-                                        href='https://google.com'
+                                        href={user?.profile?.resume}
                                         target='_blank'
                                         rel="noopener noreferrer"
                                         className='text-blue-600 hover:underline hover:text-blue-800 text-sm'
                                     >
-                                        View Resume
+                                        {user?.profile?.resumeOriginalName}
                                     </a>
                                     : <span className='text-sm text-gray-500'>NA</span>
-                            }
+                            } 
                         </div>
                     </div>
                 </div>
