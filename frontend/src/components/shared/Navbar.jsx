@@ -73,8 +73,8 @@ const Navbar = () => {
                       <AvatarImage src={user?.profile?.profilePhoto} />
                     </Avatar>
                     <div>
-                      <h4 className='font-medium'>{user?.fulllname}</h4>
-                      <p className='text-sm text-muted-foreground'>{user?.prfile?.bio}</p>
+                      <h4 className='font-medium'>{user?.fullname}</h4>
+                      <p className='text-sm text-muted-foreground'>{user?.profile?.bio}</p>
                     </div>
                   </div>
                   <div className='flex flex-col my-2 text-gray-600 '>

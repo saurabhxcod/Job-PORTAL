@@ -13,8 +13,10 @@ import { useSelector } from 'react-redux';
 const isResume = true;
 const Profile = () => {
 
-    const [open,setOpen]=useState(false);
-    const {user}=useSelector(store=>store.auth);
+    const [open, setOpen] = useState(false);
+    const { user } = useSelector(store => store.auth);
+        console.log("Resume URL:", user?.profile?.resume);
+    console.log("Resume Original Name:", user?.profile?.resumeOriginalName);
 
     return (
         <div className="bg-[#F9FAFB] min-h-screen">
@@ -31,10 +33,10 @@ const Profile = () => {
                             </Avatar>
                             <div>
                                 <h1 className='text-2xl font-semibold text-gray-800'>{user?.fullname}</h1>
-                                <p className='text-sm text-gray-500 mt-1'>{user?.bio}</p>
+                                <p className='text-sm text-gray-500 mt-1'>{user?.profile?.bio}</p>
                             </div>
                         </div>
-                        <Button onClick={()=>setOpen(true)} variant="outline" size="icon" className='border-gray-300 hover:bg-gray-100'>
+                        <Button onClick={() => setOpen(true)} variant="outline" size="icon" className='border-gray-300 hover:bg-gray-100'>
                             <Pen className="h-4 w-4" />
                         </Button>
                     </div>
@@ -68,30 +70,26 @@ const Profile = () => {
                     </div>
 
                     {/* Resume Section */}
-                    <div className='mt-6'>
-                        <Label className="text-md font-semibold text-gray-800">Resume</Label>
-                        <div className='mt-1'>
-                            {
-                                isResume
-                                    ? <a
-                                        href={user?.profile?.resume}
-                                        target='_blank'
-                                        rel="noopener noreferrer"
-                                        className='text-blue-600 hover:underline hover:text-blue-800 text-sm'
-                                    >
-                                        {user?.profile?.resumeOriginalName}
-                                    </a>
-                                    : <span className='text-sm text-gray-500'>NA</span>
-                            } 
-                        </div>
-                    </div>
+                    {
+                        user?.profile?.resume
+                            ? <a
+                                href={user?.profile?.resume}
+                                target='_blank'
+                                rel="noopener noreferrer"
+                                className='text-blue-600 hover:underline hover:text-blue-800 text-sm'
+                            >
+                                {user.profile.resumeOriginalName || "View Resume"}
+                            </a>
+                            : <span className='text-sm text-gray-500'>NA</span>
+                    }
+
                 </div>
 
                 <div className='bg-white border border-gray-200 rounded-2xl p-6 shadow-sm'>
                     <h1 className='text-lg font-bold text-gray-800 mb-4'>Applied Jobs</h1>
                     <AppliedJobTable />
                 </div>
-                <UpdateProfileDialogue open={open} setOpen={setOpen}/>
+                <UpdateProfileDialogue open={open} setOpen={setOpen} />
             </div>
         </div>
     )

@@ -14,7 +14,7 @@ import { Loader2 } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { USER_API_END_POINT } from "../utils/constant.js"
 import { toast } from 'sonner';
-import {setUser} from '../redux/authSlice.js'
+import { setUser } from '../redux/authSlice.js'
 
 
 const UpdateProfileDialogue = ({ open, setOpen }) => {
@@ -155,11 +155,12 @@ const UpdateProfileDialogue = ({ open, setOpen }) => {
                   name="file"
                   type="file"
                   onChange={fileChangeHandler}
-          
+                  accept=".pdf,.doc,.docx"
                   className="col-span-3 px-3 py-2 text-sm rounded-lg border border-gray-300
-                    file:mr-4 file:py-1 file:px-2 file:border-0 file:rounded
-                    file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200 transition"
+    file:mr-4 file:py-1 file:px-2 file:border-0 file:rounded
+    file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200 transition"
                 />
+
               </div>
             </div>
 
