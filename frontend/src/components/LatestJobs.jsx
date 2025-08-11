@@ -2,7 +2,8 @@ import React from 'react'
 import { useSelector } from 'react-redux';
 import LatestJobCard from './LatestJobCard';
 const LatestJobs = () => {
-  const { allJobs } = useSelector(store => store.job);
+  const allJobs = useSelector(store => store.job?.allJobs || []);
+
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-20">
