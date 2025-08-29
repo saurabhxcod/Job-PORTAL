@@ -1,6 +1,5 @@
-import { Application } from "../Models/application.js";
-import { Job } from "../Models/job.js";
-
+import { Application } from "../models/application.model.js";
+import { Job } from "../models/job.model.js";
 
 export const applyJob = async (req, res) => {
     try {
@@ -71,8 +70,7 @@ export const getAppliedJobs = async (req,res) => {
         console.log(error);
     }
 }
-// Number of users apppied for the job
-
+// admin dekhega kitna user ne apply kiya hai
 export const getApplicants = async (req,res) => {
     try {
         const jobId = req.params.id;

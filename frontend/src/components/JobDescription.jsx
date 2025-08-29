@@ -1,91 +1,85 @@
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Bookmark, Calendar, MapPin, User2 } from "lucide-react";
+import React, { useEffect, useState } from 'react'
+import { Badge } from './ui/badge'
+import { Button } from './ui/button'
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
+import { APPLICATION_API_END_POINT, JOB_API_END_POINT } from '@/utils/constant';
+import { setSingleJob } from '@/redux/jobSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'sonner';
 
 const JobDescription = () => {
-  const isApplied = true;
+    const {singleJob} = useSelector(store => store.job);
+    const {user} = useSelector(store=>store.auth);
+    const isIntiallyApplied = singleJob?.applications?.some(application => application.applicant === user?._id) || false;
+    const [isApplied, setIsApplied] = useState(isIntiallyApplied);
 
-  return (
-    <div className="max-w-5xl mx-auto my-10 px-6 sm:px-10 py-10 bg-white shadow-xl rounded-3xl border border-gray-100">
-      {/* Header Section */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Senior Software Engineer</h1>
-          <p className="text-sm text-gray-500 mt-1 flex items-center gap-2">
-            <MapPin className="h-4 w-4 text-gray-400" /> Bangalore, India
-          </p>
+    const params = useParams();
+    const jobId = params.id;
+    const dispatch = useDispatch();
 
-          <div className="flex flex-wrap gap-2 mt-4">
-            <Badge className="bg-blue-100 text-blue-700 font-medium px-3 py-1 rounded-full">12 Positions</Badge>
-            <Badge className="bg-red-100 text-red-600 font-medium px-3 py-1 rounded-full">Part-time</Badge>
-            <Badge className="bg-purple-100 text-purple-700 font-medium px-3 py-1 rounded-full">24 LPA</Badge>
-          </div>
-        </div>
+    const applyJobHandler = async () => {
+        try {
+            const res = await axios.get(`${APPLICATION_API_END_POINT}/apply/${jobId}`, {withCredentials:true});
+            
+            if(res.data.success){
+                setIsApplied(true); // Update the local state
+                const updatedSingleJob = {...singleJob, applications:[...singleJob.applications,{applicant:user?._id}]}
+                dispatch(setSingleJob(updatedSingleJob)); // helps us to real time UI update
+                toast.success(res.data.message);
 
-        <div className="flex items-center gap-3">
-          <Button
-            variant="outline"
-            size="icon"
-            className="border-gray-300 hover:bg-gray-100"
-          >
-            <Bookmark className="h-5 w-5" />
-          </Button>
+            }
+        } catch (error) {
+            console.log(error);
+            toast.error(error.response.data.message);
+        }
+    }
 
-          <Button
-            disabled={isApplied}
-            className={`px-6 py-2 text-white font-semibold rounded-xl shadow transition-all duration-300 ${
-              isApplied
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-[#6A38C2] hover:bg-[#542ea2]"
-            }`}
-          >
-            {isApplied ? "Already Applied" : "Apply Now"}
-          </Button>
-        </div>
-      </div>
+    useEffect(()=>{
+        const fetchSingleJob = async () => {
+            try {
+                const res = await axios.get(`${JOB_API_END_POINT}/get/${jobId}`,{withCredentials:true});
+                if(res.data.success){
+                    dispatch(setSingleJob(res.data.job));
+                    setIsApplied(res.data.job.applications.some(application=>application.applicant === user?._id)) // Ensure the state is in sync with fetched data
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        fetchSingleJob(); 
+    },[jobId,dispatch, user?._id]);
 
-      {/* Divider */}
-      <div className="border-t border-gray-200 mt-8 mb-6" />
+    return (
+        <div className='max-w-7xl mx-auto my-10'>
+            <div className='flex items-center justify-between'>
+                <div>
+                    <h1 className='font-bold text-xl'>{singleJob?.title}</h1>
+                    <div className='flex items-center gap-2 mt-4'>
+                        <Badge className={'text-blue-700 font-bold'} variant="ghost">{singleJob?.postion} Positions</Badge>
+                        <Badge className={'text-[#F83002] font-bold'} variant="ghost">{singleJob?.jobType}</Badge>
+                        <Badge className={'text-[#7209b7] font-bold'} variant="ghost">{singleJob?.salary}LPA</Badge>
+                    </div>
+                </div>
+                <Button
+                onClick={isApplied ? null : applyJobHandler}
+                    disabled={isApplied}
+                    className={`rounded-lg ${isApplied ? 'bg-gray-600 cursor-not-allowed' : 'bg-[#7209b7] hover:bg-[#5f32ad]'}`}>
+                    {isApplied ? 'Already Applied' : 'Apply Now'}
+                </Button>
+            </div>
+            <h1 className='border-b-2 border-b-gray-300 font-medium py-4'>Job Description</h1>
+            <div className='my-4'>
+                <h1 className='font-bold my-1'>Role: <span className='pl-4 font-normal text-gray-800'>{singleJob?.title}</span></h1>
+                <h1 className='font-bold my-1'>Location: <span className='pl-4 font-normal text-gray-800'>{singleJob?.location}</span></h1>
+                <h1 className='font-bold my-1'>Description: <span className='pl-4 font-normal text-gray-800'>{singleJob?.description}</span></h1>
+                <h1 className='font-bold my-1'>Experience: <span className='pl-4 font-normal text-gray-800'>{singleJob?.experience} yrs</span></h1>
+                <h1 className='font-bold my-1'>Salary: <span className='pl-4 font-normal text-gray-800'>{singleJob?.salary}LPA</span></h1>
+                <h1 className='font-bold my-1'>Total Applicants: <span className='pl-4 font-normal text-gray-800'>{singleJob?.applications?.length}</span></h1>
+                <h1 className='font-bold my-1'>Posted Date: <span className='pl-4 font-normal text-gray-800'>{singleJob?.createdAt.split("T")[0]}</span></h1>
+            </div>
+        </div>
+    )
+}
 
-      {/* Details Section */}
-      <div className="space-y-5 text-gray-700 text-sm sm:text-base">
-        <div className="flex items-start sm:items-center gap-2">
-          <span className="font-semibold w-36">Role:</span>
-          <span className="text-gray-800">Senior Software Engineer</span>
-        </div>
-        <div className="flex items-start sm:items-center gap-2">
-          <span className="font-semibold w-36">Location:</span>
-          <span className="text-gray-800">Bangalore, India</span>
-        </div>
-        <div className="flex items-start gap-2">
-          <span className="font-semibold w-36">Description:</span>
-          <span className="text-gray-800">
-            Lead the backend architecture, mentor engineers, and deliver high-performance APIs in a fast-paced product environment.
-          </span>
-        </div>
-        <div className="flex items-start sm:items-center gap-2">
-          <span className="font-semibold w-36">Experience:</span>
-          <span className="text-gray-800">7+ years</span>
-        </div>
-        <div className="flex items-start sm:items-center gap-2">
-          <span className="font-semibold w-36">Salary:</span>
-          <span className="text-gray-800">₹24,00,000 / year</span>
-        </div>
-        <div className="flex items-start sm:items-center gap-2">
-          <span className="font-semibold w-36">Applicants:</span>
-          <span className="text-gray-800 flex items-center gap-1">
-            <User2 className="h-4 w-4 text-gray-500" /> 132 people applied
-          </span>
-        </div>
-        <div className="flex items-start sm:items-center gap-2">
-          <span className="font-semibold w-36">Posted On:</span>
-          <span className="text-gray-800 flex items-center gap-1">
-            <Calendar className="h-4 w-4 text-gray-500" /> 17 Oct 2025
-          </span>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default JobDescription;
+export default JobDescription
