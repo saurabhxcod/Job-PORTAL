@@ -1,9 +1,5 @@
-Samajh gaya bhai 😄. Maine poora README ek hi **ready-to-copy page** me arrange kar diya hai. Tum bas niche se copy kar lo aur GitHub pe paste kar do:
 
----
-
-````markdown
-# 🤝🏼 Job Portal – Full Stack MERN Project
+# 🤝🏼 Job Junction – Full Stack MERN Project
 
 [![GitHub Repo stars](https://img.shields.io/github/stars/yourusername/job-portal?style=social)](https://github.com/yourusername/job-portal) [![GitHub issues](https://img.shields.io/github/issues/yourusername/job-portal)](https://github.com/yourusername/job-portal/issues) [![License](https://img.shields.io/github/license/yourusername/job-portal)](LICENSE)  
 
