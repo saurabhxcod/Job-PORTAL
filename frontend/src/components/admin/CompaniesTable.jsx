@@ -7,21 +7,20 @@ import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
 const CompaniesTable = () => {
-    const { companies, searchCompanyByText } = useSelector(store => store.company);
-    const [filterCompany, setFilterCompany] = useState(companies);
-    const navigate = useNavigate();
-    useEffect(()=>{
-        const filteredCompany = companies.length >= 0 && companies.filter((company)=>{
-            if(!searchCompanyByText){
-                return true
-            };
-            return company?.name?.toLowerCase().includes(searchCompanyByText.toLowerCase());
+    const { companies, searchCompanyByText } = useSelector(store => store.company)
+    const [filterCompany, setFilterCompany] = useState(companies)
+    const navigate = useNavigate()
 
-        });
-        setFilterCompany(filteredCompany);
-    },[companies,searchCompanyByText])
+    useEffect(() => {
+        const filteredCompany = companies.filter((company) => {
+            if (!searchCompanyByText) return true
+            return company?.name?.toLowerCase().includes(searchCompanyByText.toLowerCase())
+        })
+        setFilterCompany(filteredCompany)
+    }, [companies, searchCompanyByText])
+
     return (
-        <div>
+        <div className="overflow-x-auto">
             <Table>
                 <TableCaption>A list of your recent registered companies</TableCaption>
                 <TableHeader>
@@ -33,31 +32,36 @@ const CompaniesTable = () => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {
-                        filterCompany?.map((company) => (
-                            <tr>
-                                <TableCell>
-                                    <Avatar>
-                                        <AvatarImage src={company.logo}/>
-                                    </Avatar>
-                                </TableCell>
-                                <TableCell>{company.name}</TableCell>
-                                <TableCell>{company.createdAt.split("T")[0]}</TableCell>
-                                <TableCell className="text-right cursor-pointer">
-                                    <Popover>
-                                        <PopoverTrigger><MoreHorizontal /></PopoverTrigger>
-                                        <PopoverContent className="w-32">
-                                            <div onClick={()=> navigate(`/admin/companies/${company._id}`)} className='flex items-center gap-2 w-fit cursor-pointer'>
-                                                <Edit2 className='w-4' />
-                                                <span>Edit</span>
-                                            </div>
-                                        </PopoverContent>
-                                    </Popover>
-                                </TableCell>
-                            </tr>
-
-                        ))
-                    }
+                    {filterCompany?.map((company) => (
+                        <TableRow
+                            key={company._id}
+                            className="hover:bg-gray-50 transition-colors duration-200"
+                        >
+                            <TableCell>
+                                <Avatar className="h-10 w-10">
+                                    <AvatarImage src={company.logo} />
+                                </Avatar>
+                            </TableCell>
+                            <TableCell className="font-medium">{company.name}</TableCell>
+                            <TableCell>{company.createdAt.split("T")[0]}</TableCell>
+                            <TableCell className="text-right">
+                                <Popover>
+                                    <PopoverTrigger>
+                                        <MoreHorizontal className="cursor-pointer" />
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-32">
+                                        <div
+                                            onClick={() => navigate(`/admin/companies/${company._id}`)}
+                                            className="flex items-center gap-2 w-fit cursor-pointer hover:text-blue-600"
+                                        >
+                                            <Edit2 className="w-4" />
+                                            <span>Edit</span>
+                                        </div>
+                                    </PopoverContent>
+                                </Popover>
+                            </TableCell>
+                        </TableRow>
+                    ))}
                 </TableBody>
             </Table>
         </div>

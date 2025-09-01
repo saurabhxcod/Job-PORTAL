@@ -9,27 +9,35 @@ import { useDispatch } from 'react-redux'
 import { setSearchCompanyByText } from '@/redux/companySlice'
 
 const Companies = () => {
-    useGetAllCompanies();
-    const [input, setInput] = useState("");
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
+    useGetAllCompanies()
+    const [input, setInput] = useState("")
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
 
-    useEffect(()=>{
-        dispatch(setSearchCompanyByText(input));
-    },[input]);
+    useEffect(() => {
+        dispatch(setSearchCompanyByText(input))
+    }, [input])
+
     return (
-        <div>
+        <div className='bg-gray-50 min-h-screen'>
             <Navbar />
-            <div className='max-w-6xl mx-auto my-10'>
-                <div className='flex items-center justify-between my-5'>
+            <div className='max-w-6xl mx-auto my-10 space-y-6'>
+                <div className='flex flex-col md:flex-row items-center justify-between gap-4'>
                     <Input
-                        className="w-fit"
+                        className="flex-1"
                         placeholder="Filter by name"
                         onChange={(e) => setInput(e.target.value)}
                     />
-                    <Button onClick={() => navigate("/admin/companies/create")}>New Company</Button>
+                    <Button
+                        onClick={() => navigate("/admin/companies/create")}
+                        className="bg-[#7209b7] hover:bg-[#5f32ad] text-white"
+                    >
+                        New Company
+                    </Button>
                 </div>
-                <CompaniesTable/>
+                <div className='bg-white border border-gray-200 rounded-2xl p-6 shadow-md hover:shadow-lg transition-all duration-300'>
+                    <CompaniesTable />
+                </div>
             </div>
         </div>
     )
